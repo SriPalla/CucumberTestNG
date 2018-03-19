@@ -1,7 +1,6 @@
 package runner;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -40,9 +39,9 @@ public class CucumberRunner extends AbstractTestNGCucumberTests {
 
 	public void LoadConfigProperty() throws IOException {
 		config = new Properties();
-		FileInputStream ip = new FileInputStream(
-				System.getProperty("user.dir") + "//src//main//resources//config//config.properties");
-		config.load(ip);
+		/*FileInputStream ip = new FileInputStream(
+				System.getProperty("user.dir") + "//src//main//resources//config//config.properties");*/
+		config.load(getClass().getResourceAsStream("/config/config.properties"));
 	}
 
 	public void openBrowser() throws Exception {
@@ -51,8 +50,8 @@ public class CucumberRunner extends AbstractTestNGCucumberTests {
 
 			driver = new FirefoxDriver();
 		} else if (config.getProperty("browserType").equals("Chrome")) {
-			System.setProperty("webdriver.chrome.driver",
-					System.getProperty("user.dir") + "//src//main//resources//drivers/chromedriver");
+			System.setProperty("webdriver.chrome.driver", getClass().getResource("/drivers/chromedriver").getPath());
+					//System.getProperty("user.dir") + "//src//main//resources//drivers/chromedriver");
 			driver = new ChromeDriver();
 		}
 	}
@@ -98,7 +97,7 @@ public class CucumberRunner extends AbstractTestNGCucumberTests {
 	@AfterClass(alwaysRun = true)
 	public void takeScreenshot() throws IOException {
 		File scrFile = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
-		FileUtils.copyFile(scrFile, new File(System.getProperty("user.dir") + "//screenshots/screenshot.png"));
+		FileUtils.copyFile(scrFile, new File(/*System.getProperty("user.dir")*/getClass().getResource("").getPath() + "/screenshots/screenshot.png"));
 
 	}
 
@@ -108,7 +107,7 @@ public class CucumberRunner extends AbstractTestNGCucumberTests {
 			File imageFile = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
 			String failureImageFileName = result.getMethod().getMethodName()
 					+ new SimpleDateFormat("MM-dd-yyyy_HH-ss").format(new GregorianCalendar().getTime()) + ".png";
-			File failureImageFile = new File(System.getProperty("user.dir") + "//screenshots//" + failureImageFileName);
+			File failureImageFile = new File(/*System.getProperty("user.dir")*/ getClass().getResource("").getPath()+ "//screenshots//" + failureImageFileName);
 			FileUtils.copyFile(imageFile, failureImageFile);
 		}
 
