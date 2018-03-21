@@ -10,6 +10,7 @@ import java.util.Properties;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.SystemUtils;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
@@ -50,7 +51,14 @@ public class CucumberRunner extends AbstractTestNGCucumberTests {
 
 			driver = new FirefoxDriver();
 		} else if (config.getProperty("browserType").equals("Chrome")) {
-			System.setProperty("webdriver.chrome.driver", getClass().getResource("/drivers/chromedriver").getPath());
+			if (SystemUtils.IS_OS_WINDOWS) {
+				System.setProperty("webdriver.chrome.driver", getClass().getResource("/drivers/chromedriverwin").getPath());
+			} else if (SystemUtils.IS_OS_LINUX) {
+				System.setProperty("webdriver.chrome.driver", getClass().getResource("/drivers/chromedriverlinux").getPath());
+			} else {
+				System.setProperty("webdriver.chrome.driver", getClass().getResource("/drivers/chromedrivermac").getPath());
+			}
+			
 					//System.getProperty("user.dir") + "//src//main//resources//drivers/chromedriver");
 			driver = new ChromeDriver();
 		}
